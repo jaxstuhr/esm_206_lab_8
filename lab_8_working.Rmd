@@ -45,3 +45,63 @@ ggplot(data = homes_sub, aes(x = Price)) +
   theme_light()
 ```
 
+Explore relationship between sq footage, home price
+
+```{r}
+ggplot(homes_sub, aes(x = SqFt, y = Price)) + 
+  geom_point(aes( color = City, shape  = Status)) +
+  geom_smooth(method = "lm")
+```
+
+## model relationship w home price as dependant var
+
+```{r}
+homes_lm1 = lm(Price ~ 
+                 City + 
+                 Bedrooms + 
+                 Bathrooms + 
+                 SqFt + 
+                 PricePerSqFt + 
+                 Status, 
+               data = homes_sub)
+
+# subset w only quantitative vars
+homes_quant = homes_sub %>% 
+  select(Price:PricePerSqFt)
+
+# find correlation
+homes_cor = cor(homes_quant)
+homes_cor
+corrplot(homes_cor, method = 'square')
+
+# explore diagnostic plots
+plot(homes_lm1)
+```
+
+```{r}
+# try another model
+homes_lm2 = lm(Price ~
+                 City + 
+                 SqFt + 
+                 Status, 
+               data = homes_sub)
+```
+
+## Check aic value of each model
+```{r}
+AIC(homes_lm1)
+AIC(homes_lm2)
+```
+
+## Try another model
+```{r}
+homes_lm3 = lm(Price ~
+                PricePerSqFt + 
+                 SqFt,
+               data = homes_sub)
+
+AIC(homes_lm3)
+```
+
+## THis is my branch updateeee yeehaw
+
