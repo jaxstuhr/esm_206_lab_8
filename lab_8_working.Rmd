@@ -1,0 +1,47 @@
+---
+title: "Lab 8"
+author: "Jaxon Stuhr"
+date: "11/15/2021"
+output: html_document
+---
+
+```{r setup, include=TRUE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(corrplot)
+library(stargazer)
+library(broom)
+library(modelsummary)
+library(here)
+```
+
+```{r}
+#read in data
+homes = read_csv(here("slo_homes.csv"))
+```
+
+```{r}
+# subset w observations w city = slo, arroyo grande, atascedero, santa maria-orcutt
+homes_sub = homes %>% 
+  filter(City %in% c("Santa Maria-Orcutt", "Arroyo Grande", "Atascadero", "San Luis Obispo"  ))
+```
+
+Summary statistics for home price by city, sale status
+
+mean and standard dev of home price grouped by city, sale status
+
+```{r, eval = FALSE}
+# eval = FALSE stops code from running each time you knit
+homes_sub %>% 
+  group_by(City, Status) %>% 
+  summarise(
+    mean_price = round(mean(Price)),
+    sd_price = round(sd(Price))
+  )
+
+ggplot(data = homes_sub, aes(x = Price)) + 
+  geom_density(aes(color = City, fill = City), alpha = 0.3) + 
+  scale_x_continuous(limits = c(0, 3e6)) +
+  theme_light()
+```
+
